@@ -1,0 +1,138 @@
+{
+    "openapi": "3.0.0",
+    "info": { "description": "认证平台后台相关接口文档", "version": "1.0", "title": "认证平台后台系统", "contact": { "name": "连屏科技" } },
+    "tags": [
+        { "name": "UmsAdminController", "description": "后台用户管理" },
+        { "name": "UmsMenuController", "description": "后台菜单管理" },
+        { "name": "UmsResourceCategoryController", "description": "后台资源分类管理" },
+        { "name": "UmsResourceController", "description": "后台资源管理" },
+        { "name": "UmsRoleController", "description": "后台用户角色管理" },
+        { "name": "客户端接口", "description": "Oauth Client Controller" }
+    ],
+    "paths": {
+        "/role/create": {
+            "post": {
+                "tags": ["UmsRoleController"],
+                "summary": "添加角色",
+                "operationId": "createUsingPOST_3",
+                "requestBody": { "$ref": "#/components/requestBodies/_11" },
+                "responses": {
+                    "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/CommonResult" } } } },
+                    "201": { "description": "Created" },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "404": { "description": "Not Found" }
+                },
+                "security": [{ "Authorization": ["global"] }],
+                "deprecated": false
+            }
+        },
+        "/role/delete": {
+            "post": {
+                "tags": ["UmsRoleController"],
+                "summary": "批量删除角色",
+                "operationId": "deleteUsingPOST_4",
+                "parameters": [
+                    { "name": "ids", "in": "query", "description": "ids", "required": true, "explode": true, "schema": { "type": "array", "items": { "type": "integer", "format": "int64" } } }
+                ],
+                "responses": {
+                    "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/CommonResult" } } } },
+                    "201": { "description": "Created" },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "404": { "description": "Not Found" }
+                },
+                "security": [{ "Authorization": ["global"] }],
+                "deprecated": false
+            }
+        },
+        "/role/list": {
+            "get": {
+                "tags": ["UmsRoleController"],
+                "summary": "根据角色名称分页获取角色列表",
+                "operationId": "listUsingGET_4",
+                "parameters": [
+                    { "name": "keyword", "in": "query", "description": "keyword", "required": false, "schema": { "type": "string" } },
+                    { "name": "pageNum", "in": "query", "description": "pageNum", "required": false, "schema": { "type": "integer", "format": "int32", "default": 1 } },
+                    { "name": "pageSize", "in": "query", "description": "pageSize", "required": false, "schema": { "type": "integer", "format": "int32", "default": 5 } }
+                ],
+                "responses": {
+                    "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/CommonResult_4" } } } },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "404": { "description": "Not Found" }
+                },
+                "security": [{ "Authorization": ["global"] }],
+                "deprecated": false
+            }
+        },
+        "/role/update/{id}": {
+            "post": {
+                "tags": ["UmsRoleController"],
+                "summary": "修改角色",
+                "operationId": "updateUsingPOST_4",
+                "parameters": [{ "name": "id", "in": "path", "description": "id", "required": true, "schema": { "type": "integer", "format": "int64" } }],
+                "requestBody": { "$ref": "#/components/requestBodies/_11" },
+                "responses": {
+                    "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/CommonResult" } } } },
+                    "201": { "description": "Created" },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "404": { "description": "Not Found" }
+                },
+                "security": [{ "Authorization": ["global"] }],
+                "deprecated": false
+            }
+        }
+    },
+    "components": {
+        "requestBodies": {
+            "_11": {
+                "content": { "application/json": { "schema": { "$ref": "#/components/schemas/_11" } } },
+                "description": "role",
+                "required": true
+            }
+        },
+        "securitySchemes": { "Authorization": { "type": "apiKey", "name": "Authorization", "in": "header" } },
+        "schemas": {
+            "CommonResult": {
+                "type": "object",
+                "properties": { "code": { "type": "integer", "format": "int64" }, "data": { "type": "object" }, "message": { "type": "string" } },
+                "title": "CommonResult"
+            },
+            "CommonResult_4": {
+                "type": "object",
+                "properties": { "code": { "type": "integer", "format": "int64" }, "data": { "$ref": "#/components/schemas/_4" }, "message": { "type": "string" } },
+                "title": "CommonResult«分页数据封装类«角色»»"
+            },
+            "_4": {
+                "type": "object",
+                "properties": {
+                    "list": {
+                        "type": "array",
+                        "description": "数据集",
+                        "items": { "$ref": "#/components/schemas/_11" }
+                    },
+                    "pageNum": { "type": "integer", "format": "int32", "description": "当前页码" },
+                    "pageSize": { "type": "integer", "format": "int32", "description": "每页显示数" },
+                    "total": { "type": "integer", "format": "int64", "description": "总数记录数" },
+                    "totalPage": { "type": "integer", "format": "int32", "description": "总页数" }
+                },
+                "title": "分页数据封装类«角色»"
+            },
+            "_11": {
+                "type": "object",
+                "properties": {
+                    "adminCount": { "type": "integer", "format": "int32", "description": "后台用户数量" },
+                    "createTime": { "type": "string", "format": "date-time", "description": "创建时间" },
+                    "description": { "type": "string", "description": "描述" },
+                    "id": { "type": "integer", "format": "int64", "description": "角色id" },
+                    "name": { "type": "string", "description": "名称" },
+                    "sort": { "type": "integer", "format": "int32" },
+                    "status": { "type": "integer", "format": "int32", "description": "启用状态：0->禁用；1->启用" }
+                },
+                "title": "角色"
+            }
+        }
+    }
+}
