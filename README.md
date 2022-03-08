@@ -84,5 +84,3 @@ export function customFetch<P extends PathKey, M extends MethodKey<P>>(path: P, 
 ## License
 
 MIT License © 2021 [morelearn1990](https://github.com/morelearn1990)
-
-http://10.5.2.210:7777/swagger-resources
