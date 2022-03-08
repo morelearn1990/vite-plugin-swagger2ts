@@ -9,8 +9,9 @@ import { generateDocs } from "./generator";
 
 function convertObjPromise(docs: any): Promise<OpenAPIObject> {
     return new Promise((resolve, reject) => {
-        convertObj(docs, {}, function (err, option) {
-            if (err || !option.openapi) return reject();
+        convertObj(docs, { patch: true }, function (err, option) {
+            // err && console.log("err", err);
+            if (err || !option.openapi) return reject(err);
             resolve(option.openapi);
         });
     });
@@ -19,7 +20,6 @@ function convertObjPromise(docs: any): Promise<OpenAPIObject> {
 function swagger2TsPlugin(userOptions: UserOptions): ExportPlugin {
     const { swaggerUrl, output, prettierPath } = resolveOptions(userOptions);
     const prettierOptions = getPrettierOptions(prettierPath);
-    console.log("prettierOptions", prettierOptions);
 
     async function loadSwaggerSource() {
         const sources = (await fetchUrl(`${swaggerUrl}/swagger-resources`)) as SwaggerSource[];
@@ -33,7 +33,7 @@ function swagger2TsPlugin(userOptions: UserOptions): ExportPlugin {
                 const apistrings = generateDocs(openapiDocs, docsName);
                 code += apistrings;
             } catch (error) {
-                console.log("error", error);
+                // console.log("vite-plugin-swagger2ts convert error", error);
             }
         }
         const outputFile = resolve(process.cwd(), output);

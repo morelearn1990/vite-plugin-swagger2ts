@@ -25,19 +25,17 @@ export function generateDocs(input: OpenAPIObject, docsName: string) {
                     let allParameters = [...(parametersExtended || []), ...(options.parameters || [])].map((item) => {
                         //  将 $ref 转换为正常的 ParameterObject 的对象
                         if ("$ref" in item) {
-                            return (getRefObject(item.$ref) as any) as ParameterObject;
+                            return getRefObject(item.$ref) as any as ParameterObject;
                         } else {
                             return item;
                         }
                     });
                     const queryParameters = allParameters.filter((item) => item.in === "query");
                     const pathParameters = allParameters.filter((item) => item.in === "path");
+                    const bodyParameters = allParameters.filter((item) => !item.in);
+
                     // 将 $ref 转换为 requestBody 对象
-                    const requestBody = options.requestBody
-                        ? "$ref" in options.requestBody
-                            ? ((getRefObject(options.requestBody.$ref) as any) as RequestBodyObject)
-                            : options.requestBody
-                        : undefined;
+                    const requestBody = options.requestBody ? ("$ref" in options.requestBody ? (getRefObject(options.requestBody.$ref) as any as RequestBodyObject) : options.requestBody) : undefined;
 
                     // 找到状态码为 200 或者 default 的 responses 体，并将 ReferenceObject 格式的转换为 ResponseObject；
                     let responses = Object.entries(options.responses)
@@ -45,15 +43,16 @@ export function generateDocs(input: OpenAPIObject, docsName: string) {
                         .sort()?.[0]?.[1] as ResponseObject | ReferenceObject;
 
                     if ("$ref" in responses) {
-                        responses = (getRefObject(responses.$ref) as any) as ResponseObject;
+                        responses = getRefObject(responses.$ref) as any as ResponseObject;
                     }
 
                     const queryString = queryParameters.length > 0 ? jsDoc({}, { key: "query", result: `{${queryParameters.map((item) => generatorParameterType(item, docsName)).join("")}\n}` }) : "";
                     const pathString = pathParameters.length > 0 ? jsDoc({}, { key: "path", result: `{${pathParameters.map((item) => generatorParameterType(item, docsName)).join("")}\n}` }) : "";
+                    const bodyExtraString = bodyParameters.length > 0 ? jsDoc({}, { key: "body", result: `{${bodyParameters.map((item) => generatorParameterType(item, docsName)).join("")}\n}` }) : "";
                     const bodyString = requestBody ? generatorRequestBodyType(requestBody, docsName) : "";
                     const responseString = generatorResponseBodyType(responses, docsName);
 
-                    return jsDoc({}, { key: method, result: `{\nparam:{${queryString}${pathString}${bodyString}}${responseString}}` });
+                    return jsDoc({}, { key: method, result: `{\nparam:{${queryString}${pathString}${bodyString || bodyExtraString}}${responseString}}` });
                 })
                 .join("");
 

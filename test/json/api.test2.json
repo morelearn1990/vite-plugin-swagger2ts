@@ -1,0 +1,90 @@
+{
+    "openapi": "3.0.0",
+    "info": { "description": "认证中心相关接口文档", "version": "1.0", "title": "认证中心", "contact": { "name": "lpkj" } },
+    "tags": [
+        { "name": "AuthController", "description": "认证中心登录认证" },
+        { "name": "KeyPairController", "description": "RSA公钥" }
+    ],
+    "paths": {
+        "/oauth/logout": {
+            "get": {
+                "tags": ["AuthController"],
+                "summary": "注销",
+                "operationId": "logoutUsingGET",
+                "responses": {
+                    "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/CommonResult" } } } },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "404": { "description": "Not Found" }
+                },
+                "security": [{ "Authorization": ["global"] }],
+                "deprecated": false
+            }
+        },
+        "/oauth/token": {
+            "post": {
+                "tags": ["AuthController"],
+                "summary": "Oauth2获取token",
+                "operationId": "postAccessTokenUsingPOST",
+                "parameters": [
+                    { "name": "client_id", "description": "Oauth2客户端ID", "required": true, "schema": { "type": "string" } },
+                    { "name": "client_secret", "description": "Oauth2客户端秘钥", "required": true, "schema": { "type": "string" } },
+                    { "name": "grant_type", "description": "授权模式", "required": true, "schema": { "type": "string" } },
+                    { "name": "password", "description": "登录密码", "required": false, "schema": { "type": "string" } },
+                    { "name": "refresh_token", "description": "刷新token", "required": false, "schema": { "type": "string" } },
+                    { "name": "username", "description": "登录用户名", "required": false, "schema": { "type": "string" } }
+                ],
+                "responses": {
+                    "200": { "description": "OK", "content": { "*/*": { "schema": { "$ref": "#/components/schemas/CommonResult_Oauth2TokenDTO_" } } } },
+                    "201": { "description": "Created" },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "404": { "description": "Not Found" }
+                },
+                "security": [{ "Authorization": ["global"] }],
+                "deprecated": false
+            }
+        },
+        "/rsa/publicKey": {
+            "get": {
+                "tags": ["KeyPairController"],
+                "summary": "获取RSA公钥",
+                "operationId": "getKeyUsingGET",
+                "responses": {
+                    "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } },
+                    "401": { "description": "Unauthorized" },
+                    "403": { "description": "Forbidden" },
+                    "404": { "description": "Not Found" }
+                },
+                "security": [{ "Authorization": ["global"] }],
+                "deprecated": false
+            }
+        }
+    },
+    "servers": [{ "url": "/lp-auth" }],
+    "components": {
+        "securitySchemes": { "Authorization": { "type": "apiKey", "name": "Authorization", "in": "header" } },
+        "schemas": {
+            "CommonResult": {
+                "type": "object",
+                "properties": { "code": { "type": "integer", "format": "int64" }, "data": { "type": "object" }, "message": { "type": "string" } },
+                "title": "CommonResult"
+            },
+            "Oauth2TokenDTO": {
+                "type": "object",
+                "properties": {
+                    "expiresIn": { "type": "integer", "format": "int32", "description": "有效时间（秒）" },
+                    "refreshToken": { "type": "string", "description": "刷令牌" },
+                    "token": { "type": "string", "description": "访问令牌" },
+                    "tokenHead": { "type": "string", "description": "访问令牌头前缀" }
+                },
+                "title": "Oauth2TokenDTO"
+            },
+            "CommonResult_Oauth2TokenDTO_": {
+                "type": "object",
+                "properties": { "code": { "type": "integer", "format": "int64" }, "data": { "$ref": "#/components/schemas/Oauth2TokenDTO" }, "message": { "type": "string" } },
+                "title": "CommonResult«Oauth2TokenDTO»"
+            }
+        }
+    }
+}

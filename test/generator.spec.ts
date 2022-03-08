@@ -3,14 +3,13 @@ import { generateDocs } from "../src/generator";
 import test1 from "./json/api.test1.json";
 
 describe("generate schema", () => {
-    test("generate number", async () => {
-        const str = await generateDocs(test1 as OpenAPIObject, "lp-auth");
-
+    test("generate test1", async () => {
+        const str = await generateDocs(test1 as OpenAPIObject, "lp-admin");
         expect(str).toEqual(`
 /**
  * @title CommonResult
  **/
-export type LpAuthComponentsSchemasCommonResult = {
+export type LpAdminComponentsSchemasCommonResult = {
 /**
  * @format int64
  **/
@@ -29,7 +28,7 @@ message: string;
 /**
  * @title CommonResult«分页数据封装类«角色»»
  **/
-export type LpAuthComponentsSchemasCommonResult_4 = {
+export type LpAdminComponentsSchemasCommonResult_4 = {
 /**
  * @format int64
  **/
@@ -37,7 +36,7 @@ code: number;
 
 /**
  **/
-data: LpAuthComponentsSchemas_4;
+data: LpAdminComponentsSchemas_4;
 
 /**
  **/
@@ -48,11 +47,11 @@ message: string;
 /**
  * @title 分页数据封装类«角色»
  **/
-export type LpAuthComponentsSchemas_4 = {
+export type LpAdminComponentsSchemas_4 = {
 /**
  * @description 数据集
  **/
-list: LpAuthComponentsSchemas_11[];
+list: LpAdminComponentsSchemas_11[];
 
 /**
  * @description 当前页码
@@ -83,7 +82,7 @@ totalPage: number;
 /**
  * @title 角色
  **/
-export type LpAuthComponentsSchemas_11 = {
+export type LpAdminComponentsSchemas_11 = {
 /**
  * @description 后台用户数量
  * @format int32
@@ -125,7 +124,7 @@ status: number;
 
 };
 
-export interface LpAuthPaths{
+export interface PathsLpAdmin{
 /**
  **/
 '/role/create': {
@@ -136,12 +135,12 @@ param:{
 /**
  * @description role
  **/
-body: LpAuthComponentsSchemas_11;
+body: LpAdminComponentsSchemas_11;
 }
 /**
  * @description OK
  **/
-response: LpAuthComponentsSchemasCommonResult;
+response: LpAdminComponentsSchemasCommonResult;
 };
 };
 
@@ -165,7 +164,7 @@ ids: number[];
 /**
  * @description OK
  **/
-response: LpAuthComponentsSchemasCommonResult;
+response: LpAdminComponentsSchemasCommonResult;
 };
 };
 
@@ -203,7 +202,7 @@ pageSize?: number;
 /**
  * @description OK
  **/
-response: LpAuthComponentsSchemasCommonResult_4;
+response: LpAdminComponentsSchemasCommonResult_4;
 };
 };
 
@@ -228,12 +227,12 @@ id: number;
 /**
  * @description role
  **/
-body: LpAuthComponentsSchemas_11;
+body: LpAdminComponentsSchemas_11;
 }
 /**
  * @description OK
  **/
-response: LpAuthComponentsSchemasCommonResult;
+response: LpAdminComponentsSchemasCommonResult;
 };
 };
 }
