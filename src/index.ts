@@ -3,7 +3,7 @@ import { resolve } from "path";
 import { convertObj } from "swagger2openapi";
 import { OpenAPIObject } from "openapi3-ts";
 import { format } from "prettier";
-import { UserOptions, ExportPlugin, SwaggerSource } from "./types";
+import { UserOptions, ExportPlugin, SwaggerSource, SwaggerDoc } from "./types";
 import { resolveOptions, fetchUrl, getPrettierOptions } from "./utils";
 import { generateDocs } from "./generator";
 
@@ -27,10 +27,10 @@ function swagger2TsPlugin(userOptions: UserOptions): ExportPlugin {
         for (let i = 0; i < sources.length; i++) {
             const { url, name: docsName } = sources[i];
             try {
-                const docs = (await fetchUrl(`${swaggerUrl}${url}`)) as any;
+                const docs = (await fetchUrl(`${swaggerUrl}${url}`)) as SwaggerDoc;
                 if (!docs.swagger) continue;
                 const openapiDocs = await convertObjPromise(docs);
-                const apistrings = generateDocs(openapiDocs, docsName);
+                const apistrings = generateDocs(openapiDocs, docsName, docs.basePath);
                 code += apistrings;
             } catch (error) {
                 // console.log("vite-plugin-swagger2ts convert error", error);

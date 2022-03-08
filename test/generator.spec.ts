@@ -4,7 +4,7 @@ import test1 from "./json/api.test1.json";
 
 describe("generate schema", () => {
     test("generate test1", async () => {
-        const str = await generateDocs(test1 as OpenAPIObject, "lp-admin");
+        const str = await generateDocs(test1 as OpenAPIObject, "lp-admin", "/lp-admin");
         expect(str).toEqual(`
 /**
  * @title CommonResult
@@ -127,7 +127,7 @@ status: number;
 export interface PathsLpAdmin{
 /**
  **/
-'/role/create': {
+'/lp-admin/role/create': {
 /**
  **/
 post: {
@@ -146,7 +146,7 @@ response: LpAdminComponentsSchemasCommonResult;
 
 /**
  **/
-'/role/delete': {
+'/lp-admin/role/delete': {
 /**
  **/
 post: {
@@ -170,7 +170,7 @@ response: LpAdminComponentsSchemasCommonResult;
 
 /**
  **/
-'/role/list': {
+'/lp-admin/role/list': {
 /**
  **/
 get: {
@@ -208,7 +208,7 @@ response: LpAdminComponentsSchemasCommonResult_4;
 
 /**
  **/
-'/role/update/{id}': {
+'/lp-admin/role/update/{id}': {
 /**
  **/
 post: {

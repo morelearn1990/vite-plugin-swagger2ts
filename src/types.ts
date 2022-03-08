@@ -19,3 +19,14 @@ export interface SwaggerSource {
     swaggerVersion: string;
     location: string;
 }
+
+export interface SwaggerDoc {
+    basePath: string;
+    swagger: string;
+    paths: { [key: string]: any };
+    definitions: { [key: string]: any };
+    host: string;
+    info: any;
+    tags: any[];
+    securityDefinitions: any;
+}

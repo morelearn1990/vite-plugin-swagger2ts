@@ -4,7 +4,7 @@ import test2 from "./json/api.test2.json";
 
 describe("generate schema", () => {
     test("generate number", async () => {
-        const str = await generateDocs(test2 as OpenAPIObject, "lp-auth");
+        const str = await generateDocs(test2 as OpenAPIObject, "lp-auth", "/lp-auth");
         expect(str).toEqual(`
 /**
  * @title CommonResult
@@ -74,7 +74,7 @@ message: string;
 export interface PathsLpAuth{
 /**
  **/
-'/oauth/logout': {
+'/lp-auth/oauth/logout': {
 /**
  **/
 get: {
@@ -88,7 +88,7 @@ response: LpAuthComponentsSchemasCommonResult;
 
 /**
  **/
-'/oauth/token': {
+'/lp-auth/oauth/token': {
 /**
  **/
 post: {
@@ -137,7 +137,7 @@ response: LpAuthComponentsSchemasCommonResult_Oauth2TokenDTO_;
 
 /**
  **/
-'/rsa/publicKey': {
+'/lp-auth/rsa/publicKey': {
 /**
  **/
 get: {

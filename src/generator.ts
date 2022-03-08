@@ -1,7 +1,7 @@
 import { OpenAPIObject, RequestBodyObject, ResponseObject, ReferenceObject, OperationObject, ParameterObject, SchemaObject } from "openapi3-ts";
 import { getRefName, toPascalCase, isTypeAny } from "./utils";
 
-export function generateDocs(input: OpenAPIObject, docsName: string) {
+export function generateDocs(input: OpenAPIObject, docsName: string, baseUrl: string) {
     function getRefObject(ref: string) {
         return ref
             .split("/")
@@ -56,7 +56,7 @@ export function generateDocs(input: OpenAPIObject, docsName: string) {
                 })
                 .join("");
 
-            return jsDoc({}, { key: `'${endPoint}'`, result: `{${result}}` });
+            return jsDoc({}, { key: `'${baseUrl}${endPoint}'`, result: `{${result}}` });
         })
         .join("");
     const typeString = input.components?.schemas
