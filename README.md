@@ -28,7 +28,17 @@ export default {
         ViteSwagger2ts({
             swaggerUrl: "url", // swagger-resources URL
             output: "pathToSave", // not require, default './src/swagger.ts'
-            prettierPath: "prettierPath" // not require, default '.prettierrc' or 'prettier.json'
+            prettierPath: "prettierPath", // not require, default '.prettierrc' or 'prettier.json'
+            formatSchema: (schema) => {
+                // not require, deal with schema. such as unwrapper common response
+                if ("properties" in schema) {
+                    const properties = schema["properties"];
+                    if ("code" in properties && ("msg" in properties || "message" in properties) && "data" in properties) {
+                        return properties["data"];
+                    }
+                }
+                return schema;
+            }
         })
     ]
 };
