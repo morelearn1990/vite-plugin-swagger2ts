@@ -1,9 +1,13 @@
+import { SchemaObject } from "openapi3-ts";
 import type { Plugin } from "vite";
+
+type FormatSchema = (schema: SchemaObject) => SchemaObject;
 
 interface Options {
     swaggerUrl: string;
     output?: string;
     prettierPath?: string;
+    formatSchema?: FormatSchema;
 }
 
 export type UserOptions = Options;
@@ -29,4 +33,10 @@ export interface SwaggerDoc {
     info: any;
     tags: any[];
     securityDefinitions: any;
+}
+
+export interface GenerateDocOption {
+    docsName: string;
+    baseUrl: string;
+    formatSchema?: FormatSchema;
 }

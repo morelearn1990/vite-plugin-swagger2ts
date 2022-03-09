@@ -1,7 +1,8 @@
 import { OpenAPIObject, RequestBodyObject, ResponseObject, ReferenceObject, OperationObject, ParameterObject, SchemaObject } from "openapi3-ts";
-import { getRefName, toPascalCase, isTypeAny } from "./utils";
+import { getRefName, isTypeAny } from "./utils";
+import { GenerateDocOption } from "./types";
 
-export function generateDocs(input: OpenAPIObject, docsName: string, baseUrl: string) {
+export function generateDocs(input: OpenAPIObject, { docsName, baseUrl, formatSchema }: GenerateDocOption) {
     function getRefObject(ref: string) {
         return ref
             .split("/")
@@ -62,12 +63,18 @@ export function generateDocs(input: OpenAPIObject, docsName: string, baseUrl: st
     const typeString = input.components?.schemas
         ? Object.entries(input.components.schemas)
               .map(([name, schema]) => {
+                  if (typeof formatSchema == "function") {
+                      schema = formatSchema(schema);
+                  }
+                  if ("$ref" in schema) {
+                      schema = getRefObject(schema.$ref) as any as SchemaObject;
+                  }
                   return generatorSchemaType(getRefName(`#/components/schemas/${name}`, docsName), schema, { isRoot: true, isExport: true, docsName });
               })
               .join("")
         : "";
-
-    return `${typeString}\nexport interface Paths${getRefName(docsName)}{${pathsTypeString}}\n`;
+    const apiString = `${typeString}\nexport interface Paths${getRefName(docsName)}{${pathsTypeString}}\n`;
+    return apiString.replaceAll(/\n\n/g, "\n").replaceAll(/\n\n/g, "\n");
 }
 
 const TYPES = {
@@ -164,5 +171,5 @@ export function jsDoc(
     const jsDoc = `\n/**\n${title ? ` * @title ${title}\n` : ""}${description ? ` * @description ${description}\n` : ""}${format ? ` * @format ${format}\n` : ""}${
         default1 ? ` * @default ${default1}\n` : ""
     }${example ? ` * @example ${example}\n` : ""} **/\n`;
-    return `${jsDoc == "/**\n**/" ? "" : jsDoc}${isRoot ? `${isExport ? "export " : ""}type ${key} = ${result};\n` : `${key}${isRequired === false ? "?" : ""}: ${result};\n`}`;
+    return `${jsDoc == "\n/**\n **/\n" ? "" : jsDoc}${isRoot ? `${isExport ? "export " : ""}type ${key} = ${result};\n` : `${key}${isRequired === false ? "?" : ""}: ${result};\n`}`;
 }
