@@ -53,7 +53,8 @@ export function generateDocs(input: OpenAPIObject, { docsName, baseUrl, formatSc
                     const bodyString = requestBody ? generatorRequestBodyType(requestBody, docsName) : "";
                     const responseString = generatorResponseBodyType(responses, docsName);
 
-                    return jsDoc({}, { key: method, result: `{\nparam:{${queryString}${pathString}${bodyString || bodyExtraString}}${responseString}}` });
+                    const paramString = `${queryString}${pathString}${bodyString || bodyExtraString}`;
+                    return jsDoc({}, { key: method, result: `{${paramString ? `\nparam:{${paramString}}` : ""}${responseString}}` });
                 })
                 .join("");
 
